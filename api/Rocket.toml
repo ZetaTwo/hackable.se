@@ -1,0 +1,2 @@
+[global.databases]
+mysql_main = { url = "mysql://hackable_se:aXjLmRO9zAJx1e26@localhost/hackable_se" }
