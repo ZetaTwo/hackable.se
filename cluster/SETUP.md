@@ -38,3 +38,12 @@ kops update cluster ${NAME} --yes
 
 kubectl get nodes
 kops validate cluster
+
+kops create ig nodes-spot --subnet eu-north-1a
+kops update cluster ${NAME} --yes
+
+# Setup test deployment
+
+
+kubectl create deployment pwnyracing-chall01 --image="928148438546.dkr.ecr.eu-west-1.amazonaws.com/pwny-racing/challenges:chall1"
+kubectl expose deployment/pwnyracing-chall01 --type="NodePort" --port=40001 --target-port=1337
