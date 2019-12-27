@@ -1,6 +1,6 @@
 <template>
 <table>
-  <caption>People</caption>
+  <caption>Scoreboard</caption>
   <thead>
     <tr>
       <th>Name</th>
