@@ -1,11 +1,10 @@
 <template>
-  <mark class="tag">{{ name }} <span v-if="editable">[x]</span></mark>
+  <mark class="tag"><slot></slot><span v-if="editable"> [x]</span></mark>
 </template>
 
 <script>
 export default {
     props: {
-        'name': String,
         'editable': Boolean
     },
 }

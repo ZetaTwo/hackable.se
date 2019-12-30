@@ -34,9 +34,9 @@
     </div>
     <div class="row responsive-label">
       <div class="col-sm-12 col-md">
-          <tag name="heap" editable="true" />
-          <tag name="rop" editable="true" />
-          <tag name="crypto" editable="true" />
+          <tag editable="true">heap</tag>
+          <tag editable="true">rop</tag>
+          <tag editable="true">crypto</tag>
       </div>
     </div>
   </fieldset>

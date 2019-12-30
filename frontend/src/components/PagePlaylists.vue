@@ -48,32 +48,32 @@
   <div class="card">
     <div class="section"><h3>Cool challenge</h3></div>
     <div class="section">Description of pretty cool challenge</div>
-    <div class="section"><mark class="tag">pwn</mark> <mark class="tag">crypto</mark></div>
+    <div class="section"><tag>pwn</tag> <tag>crypto</tag></div>
   </div>
   <div class="card">
     <div class="section"><h3>Diffcult challenge</h3></div>
     <div class="section">This one will test you</div>
-    <div class="section"><mark class="tag">pwn</mark></div>
+    <div class="section"><tag>pwn</tag></div>
   </div>
   <div class="card">
     <div class="section"><h3>Diffcult challenge</h3></div>
     <div class="section">This one will test you</div>
-    <div class="section"><mark class="tag">pwn</mark></div>
+    <div class="section"><tag>pwn</tag></div>
   </div>
   <div class="card">
     <div class="section"><h3>Diffcult challenge</h3></div>
     <div class="section">This one will test you</div>
-    <div class="section"><mark class="tag">pwn</mark></div>
+    <div class="section"><tag>pwn</tag></div>
   </div>
   <div class="card">
     <div class="section"><h3>Diffcult challenge</h3></div>
     <div class="section">This one will test you</div>
-    <div class="section"><mark class="tag">pwn</mark></div>
+    <div class="section"><tag>pwn</tag></div>
   </div>
   <div class="card">
     <div class="section"><h3>Diffcult challenge</h3></div>
     <div class="section">This one will test you</div>
-    <div class="section"><mark class="tag">pwn</mark> <mark class="tag">heap</mark></div>
+    <div class="section"><tag>pwn</tag> <tag>heap</tag></div>
   </div>
 </div>
 </div>
