@@ -1,5 +1,7 @@
 
+```
 source kops.sh
+```
 
 # IAM setup
 
