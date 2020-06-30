@@ -3,13 +3,13 @@
 use diesel::backend::Backend;
 use diesel::deserialize;
 use diesel::deserialize::FromSql;
-use diesel::expression::AsExpression;
 use diesel::expression::bound::Bound;
+use diesel::expression::AsExpression;
+use diesel::mysql::Mysql;
 use diesel::serialize;
 use diesel::serialize::Output;
 use diesel::sql_types::Binary;
 use diesel::sql_types::HasSqlType;
-use diesel::mysql::Mysql;
 use diesel::types::ToSql;
 
 use std::hash::Hash;
@@ -19,7 +19,7 @@ use std::io::Write;
 use uuid;
 use uuid::Uuid;
 
-use serde::{Deserialize,Serialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, AsExpression, FromSqlRow, Copy, Clone, Serialize, Deserialize)]
 pub struct UUID(pub Uuid);
@@ -133,9 +133,8 @@ impl Into<UUID> for u64 {
     }
 }
 
-
 impl From<rocket_contrib::uuid::Uuid> for UUID {
-    fn from(other : rocket_contrib::uuid::Uuid) -> UUID {
+    fn from(other: rocket_contrib::uuid::Uuid) -> UUID {
         UUID(Uuid::from_bytes(other.as_bytes()).unwrap())
     }
 }
