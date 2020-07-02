@@ -38,30 +38,16 @@ impl From<User> for UserPrivateInfo {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UserRegistration {
-    pub username: String,
-    pub password: String,
-    pub email: String,
-}
-
 #[derive(Insertable)]
 #[table_name = "users"]
 #[derive(Serialize, Deserialize, Debug)]
-pub struct UserCreationData {
+pub struct UserRegistration {
+    #[serde(flatten)]
     pub username: Username,
+    #[serde(flatten)]
     pub password: Password,
+    #[serde(flatten)]
     pub email: Email,
-}
-
-impl From<UserRegistration> for UserCreationData {
-    fn from(user_registration: UserRegistration) -> UserCreationData {
-        UserCreationData {
-            username: Username::from(user_registration.username),
-            password: Password::from(user_registration.password),
-            email: Email::from(user_registration.email),
-        }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -70,7 +56,7 @@ pub struct UserPublicInfo {
     pub username: Username,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Queryable, Serialize, Deserialize, Debug)]
 pub struct UserPrivateInfo {
     pub id: UUID,
     pub username: Username,

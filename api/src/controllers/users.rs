@@ -8,12 +8,8 @@ use crate::models::id::UUID;
 use crate::models::user::UserPublicInfo;
 
 use crate::models::user::User;
-use crate::models::user::UserCreationData;
 use crate::models::user::UserPrivateInfo;
 use crate::models::user::UserRegistration;
-
-use crate::models::email::Email;
-use crate::models::username::Username;
 
 #[get("/users/<user_id>")]
 pub fn get_user(
@@ -41,20 +37,21 @@ pub fn create_user(
 ) -> Result<Json<UserPrivateInfo>, Conflict<String>> {
     use crate::schema::users::dsl::*;
 
-    let creation_data = UserCreationData::from(registration.into_inner());
-
+    // Create the new user
     let insert_result = diesel::insert_into(users)
-        .values(creation_data)
+        .values(&*registration)
         .execute(&*connection);
 
-    match insert_result {
+    // Select back the newly created user
+    let select_result = insert_result.and_then(|_| {
+        users
+            .select((id, username, email, email_validated))
+            .filter(username.eq(&registration.username))
+            .first::<UserPrivateInfo>(&*connection)
+    });
+
+    match select_result {
         Err(_) => Err(Conflict(Some(format!("User already exists.")))),
-        //TODO: Actually return the created user
-        Ok(v) => Ok(Json(UserPrivateInfo {
-            id: UUID::parse_str("123e4567-e89b-12d3-a456-426655440000").unwrap(),
-            username: Username::from("USERNAME".to_string()),
-            email: Email::from("EMAIL".to_string()),
-            email_validated: false,
-        })),
+        Ok(user) => Ok(Json(user)),
     }
 }
