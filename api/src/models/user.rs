@@ -51,6 +51,14 @@ pub struct UserRegistration {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct UserUpdate {
+    #[serde(flatten)]
+    pub password: Password,
+    #[serde(flatten)]
+    pub email: Email,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct UserPublicInfo {
     pub id: UUID,
     pub username: Username,

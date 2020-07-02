@@ -42,6 +42,8 @@ fn main() {
                 index,
                 controllers::users::get_user,
                 controllers::users::create_user,
+                controllers::users::update_user,
+                controllers::users::delete_user,
             ],
         )
         .launch();
