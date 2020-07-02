@@ -21,10 +21,13 @@ features = ["diesel_mysql_pool", "uuid", "json"]
 
 [dependencies.diesel]
 version = "1.4.5"
-features = ["mysql", "uuid"]
+features = ["mysql", "uuid", "chrono"]
 
 [dependencies.diesel_codegen]
 version = "0.16.1"
 default-features = false
 features = ["mysql"]
 
+[dependencies.chrono]
+version = "0.4"
+features = ["serde"]

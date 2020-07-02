@@ -1,13 +1,19 @@
 use crate::db;
 use crate::diesel::prelude::*;
-use crate::models::*;
 
-use crate::models::id::UUID;
 use rocket::response::status::{Conflict, NotFound};
 use rocket_contrib::json::Json;
 
-use crate::users::email::Email;
-use crate::users::username::Username;
+use crate::models::id::UUID;
+use crate::models::user::UserPublicInfo;
+
+use crate::models::user::User;
+use crate::models::user::UserCreationData;
+use crate::models::user::UserPrivateInfo;
+use crate::models::user::UserRegistration;
+
+use crate::models::email::Email;
+use crate::models::username::Username;
 
 #[get("/users/<user_id>")]
 pub fn get_user(

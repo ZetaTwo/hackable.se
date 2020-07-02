@@ -7,11 +7,14 @@ extern crate rocket_contrib;
 #[macro_use]
 extern crate diesel;
 
+extern crate chrono;
+
+mod controllers;
+mod db;
 mod models;
 mod schema;
-use crate::models::*;
-mod db;
-mod users;
+
+use crate::models::ApiResult;
 
 use rocket::Request;
 use rocket_contrib::json::Json;
@@ -33,6 +36,13 @@ fn main() {
     rocket::ignite()
         .register(catchers![unprocessable_entity])
         .attach(db::DbConn::fairing())
-        .mount("/", routes![index, users::get_user, users::create_user,])
+        .mount(
+            "/",
+            routes![
+                index,
+                controllers::users::get_user,
+                controllers::users::create_user,
+            ],
+        )
         .launch();
 }

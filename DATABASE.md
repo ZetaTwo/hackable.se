@@ -1,6 +1,7 @@
 
 
 Tables:
+
 * Users
 * Sessions
 * Challenges

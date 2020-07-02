@@ -19,8 +19,8 @@ table! {
 table! {
     sessions (id) {
         id -> Binary,
-        token -> Nullable<Binary>,
-        user -> Nullable<Binary>,
+        token -> Binary,
+        user -> Binary,
         expires -> Datetime,
         created -> Datetime,
     }
@@ -42,13 +42,8 @@ table! {
         password -> Varchar,
         email -> Varchar,
         email_validated -> Bool,
+        created -> Datetime,
     }
 }
 
-allow_tables_to_appear_in_same_query!(
-    challenge_tags,
-    challenges,
-    sessions,
-    tags,
-    users,
-);
+allow_tables_to_appear_in_same_query!(challenge_tags, challenges, sessions, tags, users,);
