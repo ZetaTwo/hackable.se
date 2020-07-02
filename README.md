@@ -27,6 +27,6 @@ curl -i http://localhost:8000/users/31b7ff47-a899-42d6-881c-ac936064bfae
 curl -i http://localhost:8000/users --data '{"username": "ZetaTwo", "password": "123456", "email": "calle.svensson@zeta-two.com"}' -H 'Content-Type: application/json'
 curl -i http://localhost:8000/users --data '{"username": "ZetaTwo", "password": "123456", "email": "calle.svensson@zeta-two.com"}' -H 'Content-Type: application/json'
 curl -i http://localhost:8000/users --data '{"username": "ZetaTwo", "password": "123456"}' -H 'Content-Type: application/json'
-curl -XPATCH -i http://localhost:8000/users/31b7ff47-a899-42d6-881c-ac936064bfae --data '{"password":"abcabc", "email":"calle.svensson@zeta-two.com"}' -H 'Content-Type: application/json'
-curl -XDELETE -i http://localhost:8000/users/31b7ff47-a899-42d6-881c-ac936064bfae
+curl -i http://localhost:8000/users/31b7ff47-a899-42d6-881c-ac936064bfae -XPATCH --data '{"password":"abcabc", "email":"calle.svensson@zeta-two.com"}' -H 'Content-Type: application/json'
+curl -i http://localhost:8000/users/31b7ff47-a899-42d6-881c-ac936064bfae -XDELETE
 ```
