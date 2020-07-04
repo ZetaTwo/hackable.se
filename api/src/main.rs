@@ -6,6 +6,10 @@ extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use]
 extern crate diesel;
+#[macro_use]
+extern crate diesel_migrations;
+#[macro_use]
+extern crate log;
 
 extern crate chrono;
 
@@ -17,6 +21,7 @@ mod schema;
 use crate::models::ApiResult;
 
 use rocket::Request;
+use rocket::fairing::AdHoc;
 use rocket_contrib::json::Json;
 
 #[catch(422)]
@@ -36,6 +41,7 @@ fn main() {
     rocket::ignite()
         .register(catchers![unprocessable_entity])
         .attach(db::DbConn::fairing())
+        .attach(AdHoc::on_attach("Database Migrations", db::run_db_migrations))
         .mount(
             "/",
             routes![

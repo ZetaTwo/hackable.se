@@ -28,6 +28,12 @@ version = "0.16.1"
 default-features = false
 features = ["mysql"]
 
+[dependencies.diesel_migrations]
+version = "1.4.0"
+
+[dependencies.log]
+version = "0.4.8"
+
 [dependencies.chrono]
 version = "0.4"
 features = ["serde"]
