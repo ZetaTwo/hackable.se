@@ -20,8 +20,8 @@ mod schema;
 
 use crate::models::ApiResult;
 
-use rocket::Request;
 use rocket::fairing::AdHoc;
+use rocket::Request;
 use rocket_contrib::json::Json;
 
 #[catch(422)]

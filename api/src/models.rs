@@ -1,8 +1,12 @@
 use serde::{Deserialize, Serialize};
 
+pub mod challenge;
 pub mod email;
 pub mod id;
 pub mod password;
+pub mod session;
+pub mod solve;
+pub mod tag;
 pub mod user;
 pub mod username;
 
