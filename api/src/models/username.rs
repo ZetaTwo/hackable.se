@@ -7,6 +7,7 @@ use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 use std::io;
 use std::ops::Deref;
+use std::convert::TryFrom;
 
 #[derive(Debug, AsExpression, Serialize, Deserialize, FromSqlRow)]
 #[sql_type = "Text"]
@@ -47,6 +48,7 @@ where
     }
 }
 
+/*
 impl From<String> for Username {
     fn from(username: String) -> Self {
         Username { username: username }
@@ -60,9 +62,24 @@ impl From<&str> for Username {
         }
     }
 }
+*/
 
 impl fmt::Display for Username {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self)
+    }
+}
+
+#[derive(Debug)]
+pub enum UsernameValidationError {
+    FormatError,
+}
+
+impl TryFrom<String> for Username {
+    type Error = UsernameValidationError;
+
+    fn try_from(username: String) -> Result<Self, Self::Error> {
+        // TODO: Actually add validation
+        Ok(Username { username: username })
     }
 }

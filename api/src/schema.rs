@@ -1,4 +1,13 @@
 table! {
+    challenge_tags (id) {
+        id -> Binary,
+        challenge -> Binary,
+        tag -> Binary,
+        created -> Datetime,
+    }
+}
+
+table! {
     challenges (id) {
         id -> Binary,
         name -> Varchar,
@@ -18,6 +27,15 @@ table! {
 }
 
 table! {
+    solves (id) {
+        id -> Binary,
+        challenge -> Binary,
+        user -> Binary,
+        created -> Datetime,
+    }
+}
+
+table! {
     tags (id) {
         id -> Binary,
         name -> Varchar,
@@ -30,7 +48,7 @@ table! {
     users (id) {
         id -> Binary,
         username -> Varchar,
-        password -> Varchar,
+        password_hash -> Varchar,
         email -> Varchar,
         email_validated -> Bool,
         created -> Datetime,
@@ -38,8 +56,10 @@ table! {
 }
 
 allow_tables_to_appear_in_same_query!(
+    challenge_tags,
     challenges,
     sessions,
+    solves,
     tags,
     users,
 );

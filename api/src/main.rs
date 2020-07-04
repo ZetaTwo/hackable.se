@@ -12,6 +12,7 @@ extern crate diesel_migrations;
 extern crate log;
 
 extern crate chrono;
+extern crate argonautica;
 
 mod controllers;
 mod db;
