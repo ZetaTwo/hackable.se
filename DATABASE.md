@@ -1,5 +1,3 @@
-
-
 Tables:
 
 * Users
