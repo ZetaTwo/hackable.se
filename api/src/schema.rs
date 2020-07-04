@@ -1,13 +1,4 @@
 table! {
-    challenge_tags (id) {
-        id -> Binary,
-        challenge -> Binary,
-        tag -> Binary,
-        created -> Datetime,
-    }
-}
-
-table! {
     challenges (id) {
         id -> Binary,
         name -> Varchar,
@@ -46,4 +37,9 @@ table! {
     }
 }
 
-allow_tables_to_appear_in_same_query!(challenge_tags, challenges, sessions, tags, users,);
+allow_tables_to_appear_in_same_query!(
+    challenges,
+    sessions,
+    tags,
+    users,
+);

@@ -7,4 +7,4 @@ Tables:
 * Challenges
 * Tags
 * ChallengeTags
-* 
+* Solves
