@@ -1,3 +1,3 @@
 [development]
 argon_secret_key = "db639796acfdca9a52010230aa61474f45dcec13444775439c200b814e4b39db"
-databases = { mysql_main = { url = "mysql://hackable_se:aXjLmRO9zAJx1e26@localhost/hackable_se" } }
+databases.mysql_main.url = "mysql://hackable_se:aXjLmRO9zAJx1e26@localhost/hackable_se"

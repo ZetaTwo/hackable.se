@@ -6,7 +6,7 @@
 
 Dev:
 ```
-apt-get install libmysqlclient-dev mysql-server
+apt-get install libmysqlclient-dev libsqlite3-dev mysql-server
 sudo mysql
 > CREATE DATABASE hackable_se;
 > CREATE USER hackable_se@localhost IDENTIFIED BY '...';

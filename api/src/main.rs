@@ -18,6 +18,8 @@ mod controllers;
 mod db;
 mod models;
 mod schema;
+#[cfg(test)]
+mod tests;
 
 use crate::models::password_hash::PasswordHashingConfig;
 use crate::models::ApiResult;
@@ -34,7 +36,7 @@ fn unprocessable_entity(_: &Request) -> Json<ApiResult> {
     })
 }
 
-fn main() {
+fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .register(catchers![unprocessable_entity])
         .attach(db::DbConn::fairing())
@@ -70,5 +72,8 @@ fn main() {
                 controllers::tags::get_tag,
             ],
         )
-        .launch();
+}
+
+fn main() {
+    rocket().launch();
 }

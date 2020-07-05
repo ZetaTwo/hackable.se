@@ -1,7 +1,7 @@
-use rocket_contrib::json::Json;
-use rocket::response::Responder;
 use rocket::response::status::NotFound;
+use rocket::response::Responder;
 use rocket::State;
+use rocket_contrib::json::Json;
 
 use crate::db;
 use crate::diesel::prelude::*;
