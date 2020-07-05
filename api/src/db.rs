@@ -1,4 +1,4 @@
-#[database("mysql_main")]
+#[database("main")]
 pub struct DbConn(diesel::MysqlConnection);
 
 use rocket::Rocket;

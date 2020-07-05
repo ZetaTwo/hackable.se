@@ -36,24 +36,9 @@ fn unprocessable_entity(_: &Request) -> Json<ApiResult> {
     })
 }
 
-fn rocket() -> rocket::Rocket {
+fn rocket_base() -> rocket::Rocket {
     rocket::ignite()
         .register(catchers![unprocessable_entity])
-        .attach(db::DbConn::fairing())
-        .attach(AdHoc::on_attach(
-            "Database Migrations",
-            db::run_db_migrations,
-        ))
-        .attach(AdHoc::on_attach("Argon2 secret key", |rocket| match rocket
-            .config()
-            .get_string("argon_secret_key")
-        {
-            Err(err) => {
-                error!("Failed to read Argon2 secret key from config");
-                Err(rocket)
-            }
-            Ok(argon_secret_key) => Ok(rocket.manage(PasswordHashingConfig::new(argon_secret_key))),
-        }))
         .mount(
             "/",
             routes![
@@ -72,6 +57,25 @@ fn rocket() -> rocket::Rocket {
                 controllers::tags::get_tag,
             ],
         )
+}
+
+fn rocket() -> rocket::Rocket {
+    rocket_base()
+        .attach(db::DbConn::fairing())
+        .attach(AdHoc::on_attach(
+            "Database Migrations",
+            db::run_db_migrations,
+        ))
+        .attach(AdHoc::on_attach("Argon2 secret key", |rocket| match rocket
+            .config()
+            .get_string("argon_secret_key")
+        {
+            Err(err) => {
+                error!("Failed to read Argon2 secret key from config");
+                Err(rocket)
+            }
+            Ok(argon_secret_key) => Ok(rocket.manage(PasswordHashingConfig::new(argon_secret_key))),
+        }))
 }
 
 fn main() {
