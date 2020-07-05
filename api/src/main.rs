@@ -53,7 +53,16 @@ fn main() {
                 controllers::users::get_user,
                 controllers::users::create_user,
                 controllers::users::update_user,
-                controllers::users::delete_user,
+                controllers::challenges::list_challenges,
+                controllers::challenges::get_challenge,
+                controllers::challenges::solve_challenge,
+                controllers::challenges::start_challenge,
+                controllers::sessions::get_session,
+                controllers::sessions::create_session,
+                controllers::sessions::update_session,
+                controllers::sessions::delete_session,
+                controllers::tags::list_tags,
+                controllers::tags::get_tag,
             ],
         )
         .launch();
