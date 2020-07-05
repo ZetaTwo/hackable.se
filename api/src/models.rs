@@ -4,6 +4,7 @@ pub mod challenge;
 pub mod email;
 pub mod id;
 pub mod password;
+pub mod password_hash;
 pub mod session;
 pub mod solve;
 pub mod tag;

@@ -11,8 +11,8 @@ extern crate diesel_migrations;
 #[macro_use]
 extern crate log;
 
-extern crate chrono;
 extern crate argonautica;
+extern crate chrono;
 
 mod controllers;
 mod db;
@@ -42,7 +42,10 @@ fn main() {
     rocket::ignite()
         .register(catchers![unprocessable_entity])
         .attach(db::DbConn::fairing())
-        .attach(AdHoc::on_attach("Database Migrations", db::run_db_migrations))
+        .attach(AdHoc::on_attach(
+            "Database Migrations",
+            db::run_db_migrations,
+        ))
         .mount(
             "/",
             routes![
