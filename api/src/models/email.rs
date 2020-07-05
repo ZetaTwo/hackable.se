@@ -1,13 +1,14 @@
-use std::fmt;
-
 use diesel::backend::Backend;
 use diesel::deserialize::{self, FromSql};
 use diesel::serialize::{self, Output, ToSql};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
+use std::fmt;
 use std::io;
 use std::ops::Deref;
-use std::convert::TryFrom;
+
+const EMAIL_MIN_LENGTH: usize = 5;
 
 #[derive(Debug, AsExpression, FromSqlRow, Serialize, Deserialize)]
 #[sql_type = "Text"]
@@ -48,22 +49,7 @@ where
     }
 }
 
-/*
-impl From<String> for Email {
-    fn from(email: String) -> Self {
-        Email { email: email }
-    }
-}
-
-impl From<&str> for Email {
-    fn from(email: &str) -> Self {
-        Email {
-            email: email.to_string(),
-        }
-    }
-}
-*/
-
+// Add display
 #[derive(Debug)]
 pub enum EmailValidationError {
     FormatError,
@@ -73,11 +59,15 @@ impl TryFrom<String> for Email {
     type Error = EmailValidationError;
 
     fn try_from(email: String) -> Result<Self, Self::Error> {
-        // TODO: Actually add validation
-        Ok(Email { email: email })
+        // TODO: Add email format validation
+
+        if email.len() < EMAIL_MIN_LENGTH {
+            Err(EmailValidationError::FormatError)
+        } else {
+            Ok(Email { email: email })
+        }
     }
 }
-
 
 impl fmt::Display for Email {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

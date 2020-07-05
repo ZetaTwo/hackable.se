@@ -1,13 +1,13 @@
-use super::email::{Email, EmailValidationError};
-use super::id::UUID;
-use super::password::{Password, PasswordHash, PasswordValidationError, PasswordHashError};
-use super::username::{Username, UsernameValidationError};
-use std::convert::TryFrom;
-
-use crate::schema::users;
-
 use chrono::naive::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
+
+use super::email::{Email, EmailValidationError};
+use super::id::UUID;
+use super::password::{Password, PasswordValidationError};
+use super::password_hash::{PasswordHash, PasswordHashError};
+use super::username::{Username, UsernameValidationError};
+use crate::schema::users;
 
 #[derive(Queryable)]
 pub struct User {
@@ -46,12 +46,8 @@ pub struct UserRegistrationRequest {
     pub email: String,
 }
 
-
 impl UserRegistrationRequest {
-    // This is an instance method
-    // `&self` is sugar for `self: &Self`, where `Self` is the type of the
-    // caller object. In this case `Self` = `Rectangle`
-    fn validate(self) -> Result<UserRegistration, RegistrationValidationEror> {
+    pub fn validate(self) -> Result<UserRegistration, RegistrationValidationError> {
         UserRegistration::try_from(self)
     }
 }
@@ -60,49 +56,45 @@ impl UserRegistrationRequest {
 #[table_name = "users"]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserRegistration {
-    #[serde(flatten)]
     pub username: Username,
-    #[serde(flatten)]
     pub password_hash: PasswordHash,
-    #[serde(flatten)]
     pub email: Email,
 }
 
 #[derive(Debug)]
-pub enum RegistrationValidationEror {
+pub enum RegistrationValidationError {
     Email(EmailValidationError),
     Username(UsernameValidationError),
     PasswordValidation(PasswordValidationError),
     PasswordHash(PasswordHashError),
 }
 
-impl From<EmailValidationError> for RegistrationValidationEror {
-    fn from(err: EmailValidationError) -> RegistrationValidationEror {
-        RegistrationValidationEror::Email(err)
+impl From<EmailValidationError> for RegistrationValidationError {
+    fn from(err: EmailValidationError) -> RegistrationValidationError {
+        RegistrationValidationError::Email(err)
     }
 }
 
-impl From<UsernameValidationError> for RegistrationValidationEror {
-    fn from(err: UsernameValidationError) -> RegistrationValidationEror {
-        RegistrationValidationEror::Username(err)
+impl From<UsernameValidationError> for RegistrationValidationError {
+    fn from(err: UsernameValidationError) -> RegistrationValidationError {
+        RegistrationValidationError::Username(err)
     }
 }
 
-impl From<PasswordValidationError> for RegistrationValidationEror {
-    fn from(err: PasswordValidationError) -> RegistrationValidationEror {
-        RegistrationValidationEror::PasswordValidation(err)
+impl From<PasswordValidationError> for RegistrationValidationError {
+    fn from(err: PasswordValidationError) -> RegistrationValidationError {
+        RegistrationValidationError::PasswordValidation(err)
     }
 }
 
-impl From<PasswordHashError> for RegistrationValidationEror {
-    fn from(err: PasswordHashError) -> RegistrationValidationEror {
-        RegistrationValidationEror::PasswordHash(err)
+impl From<PasswordHashError> for RegistrationValidationError {
+    fn from(err: PasswordHashError) -> RegistrationValidationError {
+        RegistrationValidationError::PasswordHash(err)
     }
 }
-
 
 impl TryFrom<UserRegistrationRequest> for UserRegistration {
-    type Error = RegistrationValidationEror;
+    type Error = RegistrationValidationError;
 
     fn try_from(registration_request: UserRegistrationRequest) -> Result<Self, Self::Error> {
         let username = Username::try_from(registration_request.username);
@@ -113,8 +105,8 @@ impl TryFrom<UserRegistrationRequest> for UserRegistration {
         Ok(UserRegistration {
             username: username?,
             password_hash: password_hash?,
-            email: email?
-         })
+            email: email?,
+        })
     }
 }
 

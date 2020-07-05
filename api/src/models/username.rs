@@ -1,13 +1,14 @@
-use std::fmt;
-
 use diesel::backend::Backend;
 use diesel::deserialize::{self, FromSql};
 use diesel::serialize::{self, Output, ToSql};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
+use std::fmt;
 use std::io;
 use std::ops::Deref;
-use std::convert::TryFrom;
+
+const USERNAME_MIN_LENGTH: usize = 5;
 
 #[derive(Debug, AsExpression, Serialize, Deserialize, FromSqlRow)]
 #[sql_type = "Text"]
@@ -48,28 +49,13 @@ where
     }
 }
 
-/*
-impl From<String> for Username {
-    fn from(username: String) -> Self {
-        Username { username: username }
-    }
-}
-
-impl From<&str> for Username {
-    fn from(username: &str) -> Self {
-        Username {
-            username: username.to_string(),
-        }
-    }
-}
-*/
-
 impl fmt::Display for Username {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self)
     }
 }
 
+// TODO: Add display
 #[derive(Debug)]
 pub enum UsernameValidationError {
     FormatError,
@@ -79,7 +65,12 @@ impl TryFrom<String> for Username {
     type Error = UsernameValidationError;
 
     fn try_from(username: String) -> Result<Self, Self::Error> {
-        // TODO: Actually add validation
-        Ok(Username { username: username })
+        // TODO: Add username character validation
+
+        if username.len() < USERNAME_MIN_LENGTH {
+            Err(UsernameValidationError::FormatError)
+        } else {
+            Ok(Username { username: username })
+        }
     }
 }

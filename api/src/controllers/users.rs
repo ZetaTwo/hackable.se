@@ -1,7 +1,9 @@
 use crate::db;
 use crate::diesel::prelude::*;
 
-use rocket::response::status::{Conflict, NotFound};
+use rocket::response::status::NotFound;
+use rocket::response::Responder;
+
 use rocket_contrib::json::Json;
 
 use crate::models::id::UUID;
@@ -9,7 +11,7 @@ use crate::models::user::UserPublicInfo;
 
 use crate::models::user::User;
 use crate::models::user::UserPrivateInfo;
-use crate::models::user::UserRegistration;
+use crate::models::user::UserRegistrationRequest;
 use crate::models::user::UserUpdate;
 
 use crate::ApiResult;
@@ -35,21 +37,32 @@ pub fn get_user(
     }
 }
 
-#[post("/users", data = "<registration>", format = "json")]
+#[derive(Responder, Debug)]
+pub enum RegistrationError {
+    #[response(status = 400, content_type = "json")]
+    Validation(String), //(Vec<ValidationError>),
+    #[response(status = 409, content_type = "json")]
+    Conflict(String), //(Vec<ValidationError>),
+}
+
+#[post("/users", data = "<registration_request>", format = "json")]
 pub fn create_user(
     connection: db::DbConn,
-    registration: Json<UserRegistration>,
-) -> Result<Json<UserPrivateInfo>, Conflict<String>> {
+    registration_request: Json<UserRegistrationRequest>,
+) -> Result<Json<UserPrivateInfo>, RegistrationError> {
     use crate::schema::users::dsl::*;
 
-    // TODO: Validate username length
     // TODO: Validate email basic format
-    // TODO: Validate password minimum length
-    // TODO: Hash password
+
+    // TODO: Better error handling
+    let registration = registration_request
+        .into_inner()
+        .validate()
+        .map_err(|err| RegistrationError::Validation(format!("Invalid request")))?;
 
     // Create the new user
     let insert_result = diesel::insert_into(users)
-        .values(&*registration)
+        .values(&registration)
         .execute(&*connection);
 
     // Select back the newly created user
@@ -62,7 +75,7 @@ pub fn create_user(
 
     match select_result {
         // TODO: Handle different errors granularly
-        Err(_) => Err(Conflict(Some(format!("User already exists.")))),
+        Err(_) => Err(RegistrationError::Conflict(format!("User already exists"))),
         Ok(user) => Ok(Json(user)),
     }
 }
