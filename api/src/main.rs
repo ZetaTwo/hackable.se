@@ -19,6 +19,7 @@ mod db;
 mod models;
 mod schema;
 
+use crate::models::password_hash::PasswordHashingConfig;
 use crate::models::ApiResult;
 
 use rocket::fairing::AdHoc;
@@ -33,11 +34,6 @@ fn unprocessable_entity(_: &Request) -> Json<ApiResult> {
     })
 }
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
 fn main() {
     rocket::ignite()
         .register(catchers![unprocessable_entity])
@@ -46,10 +42,19 @@ fn main() {
             "Database Migrations",
             db::run_db_migrations,
         ))
+        .attach(AdHoc::on_attach("Argon2 secret key", |rocket| match rocket
+            .config()
+            .get_string("argon_secret_key")
+        {
+            Err(err) => {
+                error!("Failed to read Argon2 secret key from config");
+                Err(rocket)
+            }
+            Ok(argon_secret_key) => Ok(rocket.manage(PasswordHashingConfig::new(argon_secret_key))),
+        }))
         .mount(
             "/",
             routes![
-                index,
                 controllers::users::get_user,
                 controllers::users::create_user,
                 controllers::users::update_user,

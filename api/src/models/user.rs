@@ -5,7 +5,7 @@ use std::convert::TryFrom;
 use super::email::{Email, EmailValidationError};
 use super::id::UUID;
 use super::password::{Password, PasswordValidationError};
-use super::password_hash::{PasswordHash, PasswordHashError};
+use super::password_hash::{PasswordHash, PasswordHashError, PasswordHashingConfig};
 use super::username::{Username, UsernameValidationError};
 use crate::schema::users;
 
@@ -47,8 +47,20 @@ pub struct UserRegistrationRequest {
 }
 
 impl UserRegistrationRequest {
-    pub fn validate(self) -> Result<UserRegistration, RegistrationValidationError> {
-        UserRegistration::try_from(self)
+    pub fn validate(
+        self,
+        password_hashing_config: &PasswordHashingConfig,
+    ) -> Result<UserRegistration, RegistrationValidationError> {
+        let username = Username::try_from(self.username);
+        let password_hash = Password::try_from(self.password)?.hash(password_hashing_config);
+        let email = Email::try_from(self.email);
+
+        // TODO: return all errors instead of just first error
+        Ok(UserRegistration {
+            username: username?,
+            password_hash: password_hash?,
+            email: email?,
+        })
     }
 }
 
@@ -90,23 +102,6 @@ impl From<PasswordValidationError> for RegistrationValidationError {
 impl From<PasswordHashError> for RegistrationValidationError {
     fn from(err: PasswordHashError) -> RegistrationValidationError {
         RegistrationValidationError::PasswordHash(err)
-    }
-}
-
-impl TryFrom<UserRegistrationRequest> for UserRegistration {
-    type Error = RegistrationValidationError;
-
-    fn try_from(registration_request: UserRegistrationRequest) -> Result<Self, Self::Error> {
-        let username = Username::try_from(registration_request.username);
-        let password_hash = Password::try_from(registration_request.password)?.hash();
-        let email = Email::try_from(registration_request.email);
-
-        // TODO: return all errors instead of just first error
-        Ok(UserRegistration {
-            username: username?,
-            password_hash: password_hash?,
-            email: email?,
-        })
     }
 }
 

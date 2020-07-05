@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 use std::fmt;
 use std::ops::Deref;
 
-use super::password_hash::{PasswordHash, PasswordHashError};
+use super::password_hash::{PasswordHash, PasswordHashError, PasswordHashingConfig};
 
 const PASSWORD_MIN_LENGTH: usize = 8;
 
@@ -13,8 +13,11 @@ pub struct Password {
 }
 
 impl Password {
-    pub fn hash(&self) -> Result<PasswordHash, PasswordHashError> {
-        PasswordHash::try_from(self)
+    pub fn hash(
+        &self,
+        hash_config: &PasswordHashingConfig,
+    ) -> Result<PasswordHash, PasswordHashError> {
+        PasswordHash::hash_password(self, hash_config)
     }
 }
 

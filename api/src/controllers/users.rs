@@ -1,10 +1,12 @@
-use rocket::response::status::NotFound;
-use rocket::response::Responder;
 use rocket_contrib::json::Json;
+use rocket::response::Responder;
+use rocket::response::status::NotFound;
+use rocket::State;
 
 use crate::db;
 use crate::diesel::prelude::*;
 use crate::models::id::UUID;
+use crate::models::password_hash::PasswordHashingConfig;
 use crate::models::user::User;
 use crate::models::user::UserPrivateInfo;
 use crate::models::user::UserPublicInfo;
@@ -44,6 +46,7 @@ pub enum RegistrationError {
 pub fn create_user(
     connection: db::DbConn,
     registration_request: Json<UserRegistrationRequest>,
+    password_hashing_config: State<PasswordHashingConfig>,
 ) -> Result<Json<UserPrivateInfo>, RegistrationError> {
     use crate::schema::users::dsl::*;
 
@@ -52,7 +55,7 @@ pub fn create_user(
     // TODO: Better error handling
     let registration = registration_request
         .into_inner()
-        .validate()
+        .validate(&password_hashing_config)
         .map_err(|err| RegistrationError::Validation(format!("Invalid request")))?;
 
     // Create the new user
