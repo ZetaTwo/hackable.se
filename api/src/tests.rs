@@ -1,44 +1,14 @@
 use super::rocket;
-use crate::models::password_hash::PasswordHashingConfig;
+use crate::db::run_db_migrations;
+use crate::db::DbConn;
 use rocket::fairing::AdHoc;
 use rocket::http::ContentType;
 use rocket::http::Status;
 use rocket::local::Client;
 use rocket::Rocket;
 
-#[database("test")]
-pub struct TestDbConn(diesel::SqliteConnection);
-
-embed_migrations!();
-
-fn run_test_db_migrations(rocket: Rocket) -> Result<Rocket, Rocket> {
-    let conn = TestDbConn::get_one(&rocket).expect("database connection");
-    match embedded_migrations::run(&*conn) {
-        Ok(()) => Ok(rocket),
-        Err(e) => {
-            error!("Failed to run database migrations: {:?}", e);
-            Err(rocket)
-        }
-    }
-}
-
 fn test_rocket() -> rocket::Rocket {
     super::rocket_base()
-        .attach(TestDbConn::fairing())
-        .attach(AdHoc::on_attach(
-            "Test Database Migrations",
-            run_test_db_migrations,
-        ))
-        .attach(AdHoc::on_attach("Argon2 secret key", |rocket| match rocket
-            .config()
-            .get_string("argon_secret_key")
-        {
-            Err(err) => {
-                error!("Failed to read Argon2 secret key from config");
-                Err(rocket)
-            }
-            Ok(argon_secret_key) => Ok(rocket.manage(PasswordHashingConfig::new(argon_secret_key))),
-        }))
 }
 
 #[test]

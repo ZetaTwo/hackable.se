@@ -57,15 +57,6 @@ fn rocket_base() -> rocket::Rocket {
                 controllers::tags::get_tag,
             ],
         )
-}
-
-fn rocket() -> rocket::Rocket {
-    rocket_base()
-        .attach(db::DbConn::fairing())
-        .attach(AdHoc::on_attach(
-            "Database Migrations",
-            db::run_db_migrations,
-        ))
         .attach(AdHoc::on_attach("Argon2 secret key", |rocket| match rocket
             .config()
             .get_string("argon_secret_key")
@@ -76,6 +67,15 @@ fn rocket() -> rocket::Rocket {
             }
             Ok(argon_secret_key) => Ok(rocket.manage(PasswordHashingConfig::new(argon_secret_key))),
         }))
+        .attach(db::DbConn::fairing())
+        .attach(AdHoc::on_attach(
+            "Database Migrations",
+            db::run_db_migrations,
+        ))
+}
+
+fn rocket() -> rocket::Rocket {
+    rocket_base()
 }
 
 fn main() {

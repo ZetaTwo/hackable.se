@@ -7,6 +7,7 @@ use crate::db;
 use crate::diesel::prelude::*;
 use crate::models::id::UUID;
 use crate::models::password_hash::PasswordHashingConfig;
+use crate::models::user::RegistrationValidationError;
 use crate::models::user::User;
 use crate::models::user::UserPrivateInfo;
 use crate::models::user::UserPublicInfo;
@@ -40,6 +41,8 @@ pub enum RegistrationError {
     Validation(String), //(Vec<ValidationError>),
     #[response(status = 409, content_type = "json")]
     Conflict(String), //(Vec<ValidationError>),
+    #[response(status = 500, content_type = "json")]
+    Server(String), //(Vec<ValidationError>),
 }
 
 #[post("/users", data = "<registration_request>", format = "json")]
@@ -56,7 +59,20 @@ pub fn create_user(
     let registration = registration_request
         .into_inner()
         .validate(&password_hashing_config)
-        .map_err(|err| RegistrationError::Validation(format!("Invalid request")))?;
+        .map_err(|err| match err {
+            RegistrationValidationError::Email(email_validation_error) => {
+                RegistrationError::Validation(format!("Invalid email"))
+            }
+            RegistrationValidationError::Username(username_validation_error) => {
+                RegistrationError::Validation(format!("Invalid username"))
+            }
+            RegistrationValidationError::PasswordValidation(password_validation_error) => {
+                RegistrationError::Validation(format!("Invalid password"))
+            }
+            RegistrationValidationError::PasswordHash(password_hash_error) => {
+                RegistrationError::Server(format!("Failed to hash password"))
+            }
+        })?;
 
     // Create the new user
     let insert_result = diesel::insert_into(users)
@@ -73,6 +89,10 @@ pub fn create_user(
 
     match select_result {
         // TODO: Handle different errors granularly
+        Err(database_error) => {
+            println!("{}", database_error);
+            Err(RegistrationError::Server(format!("DB ERR")))
+        }
         Err(_) => Err(RegistrationError::Conflict(format!("User already exists"))),
         Ok(user) => Ok(Json(user)),
     }
