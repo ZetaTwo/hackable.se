@@ -55,3 +55,7 @@ curl -i http://localhost:8000/sessions --data '{"username": "ZetaTwo", "password
 curl -i http://localhost:8000/sessions/123e4567-e89b-12d3-a456-426655440000 -XPATCH
 curl -i http://localhost:8000/sessions/123e4567-e89b-12d3-a456-426655440000 -XDELETE
 ```
+
+## TODO
+
+Adapt to this architecture: https://github.com/KodrAus/rust-web-app
