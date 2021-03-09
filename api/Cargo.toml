@@ -10,9 +10,16 @@ edition = "2018"
 dotenv = "0.15.0"
 uuid = { version = "0.6", features = ["serde", "v4"] }
 serde = "1.0.114"
+serde_derive = "1.0.124"
+
+[dependencies.serde_json]
+version = "~1"
 
 [dependencies.rocket]
 version = "0.4.5"
+
+[dependencies.env_logger]
+version = "~0.6"
 
 [dependencies.rocket_contrib]
 version = "0.4.5"
@@ -40,3 +47,12 @@ version = "0.2.0"
 [dependencies.chrono]
 version = "0.4"
 features = ["serde"]
+
+[dependencies.auto_impl]
+version = "~0.4"
+
+[dependencies.failure]
+version = "~0.1"
+
+[dependencies.failure_derive]
+version = "~0.1"

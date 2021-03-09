@@ -12,17 +12,7 @@ const EMAIL_MIN_LENGTH: usize = 5;
 
 #[derive(Debug, AsExpression, FromSqlRow, Serialize, Deserialize)]
 #[sql_type = "Text"]
-pub struct Email {
-    email: String,
-}
-
-impl Deref for Email {
-    type Target = String;
-
-    fn deref(&self) -> &Self::Target {
-        &self.email
-    }
-}
+pub struct Email(String);
 
 impl<DB> FromSql<Text, DB> for Email
 where

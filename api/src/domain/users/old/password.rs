@@ -1,16 +1,13 @@
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 use std::fmt;
-use std::ops::Deref;
 
 use super::password_hash::{PasswordHash, PasswordHashError, PasswordHashingConfig};
 
 const PASSWORD_MIN_LENGTH: usize = 8;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Password {
-    password: String,
-}
+pub struct Password(String);
 
 impl Password {
     pub fn hash(
@@ -21,14 +18,6 @@ impl Password {
     }
 }
 
-impl Deref for Password {
-    type Target = String;
-
-    fn deref(&self) -> &Self::Target {
-        &self.password
-    }
-}
-
 impl TryFrom<String> for Password {
     type Error = PasswordValidationError;
 
@@ -36,8 +25,16 @@ impl TryFrom<String> for Password {
         if password.len() < PASSWORD_MIN_LENGTH {
             Err(PasswordValidationError::Format)
         } else {
-            Ok(Password { password: password })
+            Ok(Password(password))
         }
+    }
+}
+
+impl<'a> TryFrom<&'a str> for Password {
+    type Error = Error;
+
+    fn try_from(password: &'a str) -> Result<Self, Self::Error> {
+        Self::try_from(password.to_owned())
     }
 }
 
