@@ -11,16 +11,22 @@ Refer to the source for a fuller picture of what's in there.
 
 #[macro_use]
 extern crate rocket;
-
 #[macro_use]
 extern crate serde_derive;
-
 #[macro_use]
 extern crate log;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate diesel_migrations;
+#[macro_use]
+extern crate rocket_contrib;
 
-pub mod app;
-pub mod domain;
-pub mod logger;
+mod app;
+mod domain;
+mod logger;
+
+mod db;
 
 fn main() {
     logger::init();

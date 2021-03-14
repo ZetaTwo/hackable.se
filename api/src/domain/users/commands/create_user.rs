@@ -11,7 +11,7 @@ use crate::domain::{
 pub type Result = ::std::result::Result<(), Error>;
 
 /** Input for a `CreateUserCommand`. */
-#[derive(Clone, Deserialize)]
+#[derive(Deserialize)]
 pub struct CreateUser {
     pub id: UserId,
     pub username: Username,

@@ -40,7 +40,7 @@ pub fn start() {
                     Err(rocket)
                 }
                 Ok(argon_secret_key) => {
-                    Ok(rocket.manage(PasswordHashingConfig::new(argon_secret_key)))
+                    Ok(rocket.manage(users::PasswordHashingConfig::new(argon_secret_key)))
                 }
             },
         ))

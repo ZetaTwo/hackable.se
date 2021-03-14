@@ -23,21 +23,15 @@ pub fn get(
     resolver: State<Resolver>,
 ) -> Result<Json<UserPublicInfo>, Error> {
     //Err(Error::Other(err_msg("not implemented")))
-    /*let query = resolver.get_customer_with_orders_query();
-
-    match query.get_customer_with_orders(GetCustomerWithOrders { id: id })? {
-        Some(customer) => Ok(Json(customer)),
-        None => Err(Error::NotFound(err_msg("customer not found"))),
-    }*/
-
-    use crate::schema::users::dsl::*;
-
     // TODO: Select and solves/score as well
 
     let query = resolver.get_user_query(connection); //let query = resolver.get_user_with_solves_query();
 
     match query.get_user(GetUser { id: user_id })? {
-        Err(_) => Err(NotFound(format!("User {} not found", user_id.to_string()))),
+        Err(_) => Err(Error::NotFound(format!(
+            "User {} not found",
+            user_id.to_string()
+        ))),
         Ok(user) => Ok(Json(UserPublicInfo {
             id: user.id,
             username: user.username,

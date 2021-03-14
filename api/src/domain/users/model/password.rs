@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::convert::TryFrom;
 use std::fmt;
 
@@ -6,7 +6,7 @@ use super::password_hash::{PasswordHash, PasswordHashError, PasswordHashingConfi
 
 const PASSWORD_MIN_LENGTH: usize = 8;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Password(String);
 
 impl Password {

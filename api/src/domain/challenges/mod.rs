@@ -7,4 +7,4 @@ pub mod resolver;
 
 pub use self::{commands::*, model::*, queries::*, resolver::*};
 
-pub(self) use self::model::store::UserStore;
+pub(self) use self::model::store::ChallengeStore;

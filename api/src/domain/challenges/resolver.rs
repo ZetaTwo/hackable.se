@@ -27,7 +27,9 @@ impl ChallengesResolver {
         }
     }
 
-    pub(in crate::domain::challenges) fn challenge_store(&self) -> impl challenge_store::UserStore {
+    pub(in crate::domain::challenges) fn challenge_store(
+        &self,
+    ) -> impl challenge_store::ChallengeStore {
         self.challenge_store.clone()
     }
 }

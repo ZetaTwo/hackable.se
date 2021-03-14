@@ -1,4 +1,4 @@
-/*! Persistent customer storage. */
+/*! Persistent user storage. */
 use auto_impl::auto_impl;
 
 use std::{
@@ -49,8 +49,8 @@ impl UserStore for DbConn {
     }
 }
 
-pub(in crate::domain) fn in_memory_store() -> DbStore {
-    InMemoryStore {}
+pub(in crate::domain) fn in_memory_store() -> InMemoryStore {
+    RwLock::new(HashMap::new())
 }
 
 pub(in crate::domain) fn database_store(conn: DbConn) -> DbStore {
