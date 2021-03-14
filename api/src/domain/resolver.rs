@@ -1,8 +1,8 @@
 /*! Contains the root `Resolver` type. */
 
-use crate::domain::{
-    users::resolver::UsersResolver,
-    challenge::resolver::ChallengesResolver,
+use crate::{
+    db::DbConn,
+    domain::{challenges::resolver::ChallengesResolver, users::resolver::UsersResolver},
 };
 
 /**
@@ -27,11 +27,18 @@ impl Default for Resolver {
 }
 
 impl Resolver {
-    pub(in crate::domain) fn Users(&self) -> &UsersResolver {
+    pub fn database_resolver(conn: DbConn) -> Self {
+        Resolver {
+            user_resolver: UsersResolver::database_resolver(conn),
+            challenge_resolver: ChallengesResolver::database_resolver(conn),
+        }
+    }
+
+    pub(in crate::domain) fn users(&self) -> &UsersResolver {
         &self.user_resolver
     }
 
-    pub(in crate::domain) fn orders(&self) -> &ChallengesResolver {
+    pub(in crate::domain) fn challenges(&self) -> &ChallengesResolver {
         &self.challenge_resolver
     }
 }

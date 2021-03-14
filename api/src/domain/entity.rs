@@ -10,8 +10,6 @@ pub(in crate::domain) trait Entity {
     type Id;
     /** Should be `Version<Self::Data>`. */
     type Version;
-    /** Should be the result of calling `self.into_data()`. */
-    type Data;
     /** Should be the `Err` variant for any `Result` returning methods on `Self`. */
     type Error;
 }

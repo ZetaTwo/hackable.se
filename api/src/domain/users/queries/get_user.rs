@@ -3,12 +3,8 @@
 use auto_impl::auto_impl;
 
 use crate::domain::{
-    users::{
-        User,
-        UserId,
-        UserStore,
-    },
     error::Error,
+    users::{User, UserId, UserStore},
     Resolver,
 };
 

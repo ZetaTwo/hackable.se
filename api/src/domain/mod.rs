@@ -13,8 +13,8 @@ pub mod error;
 pub mod id;
 pub mod version;
 
-pub mod users;
 pub mod challenges;
+pub mod users;
 
 mod resolver;
 pub use self::resolver::*;

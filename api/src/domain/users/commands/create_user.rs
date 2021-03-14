@@ -3,18 +3,8 @@
 use auto_impl::auto_impl;
 
 use crate::domain::{
-    users::{
-        User,
-        UserId,
-        UserStore,
-
-        Username,
-        Email,
-    },
-    error::{
-        err_msg,
-        Error,
-    },
+    error::{err_msg, Error},
+    users::{Email, User, UserId, UserStore, Username},
     Resolver,
 };
 
@@ -35,9 +25,7 @@ pub trait CreateUserCommand {
 }
 
 /** Default implementation for a `CreateUserCommand`. */
-pub(in crate::domain) fn create_user_command(
-    store: impl UserStore,
-) -> impl CreateUserCommand {
+pub(in crate::domain) fn create_user_command(store: impl UserStore) -> impl CreateUserCommand {
     move |command: CreateUser| {
         debug!("creating user `{}`", command.id);
 
@@ -45,16 +33,11 @@ pub(in crate::domain) fn create_user_command(
             if store.get_user(command.id)?.is_some() {
                 err!("user `{}` already exists", command.id)?
             } else {
-                User::new(
-                    command.id,
-                    command.username,
-                    command.email,
-                    false
-                )?
+                User::new(command.id, command.username, command.email, false)?
             }
         };
 
-        store.set_User(User)?;
+        store.set_user(User)?;
 
         info!("user `{}` created", command.id);
 
@@ -64,7 +47,7 @@ pub(in crate::domain) fn create_user_command(
 
 impl Resolver {
     pub fn create_user_command(&self) -> impl CreateUserCommand {
-        let store = self.Users().user_store();
+        let store = self.users().user_store();
 
         create_user_command(store)
     }
@@ -72,10 +55,7 @@ impl Resolver {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain::Users::{
-        model::store::in_memory_store,
-        *,
-    };
+    use crate::domain::Users::{model::store::in_memory_store, *};
 
     use super::*;
 
@@ -83,9 +63,7 @@ mod tests {
     fn err_if_already_exists() {
         let store = in_memory_store();
 
-        let create = CreateUser {
-            id: UserId::new(),
-        };
+        let create = CreateUser { id: UserId::new() };
 
         let mut cmd = create_user_command(&store);
 

@@ -1,7 +1,4 @@
-use std::{
-    fmt,
-    io::Cursor,
-};
+use std::{fmt, io::Cursor};
 
 use serde_derive::*;
 
@@ -13,12 +10,7 @@ use failure_derive::*;
 use rocket::{
     http,
     request::Request,
-    response::{
-        self,
-        content,
-        Responder,
-        Response,
-    },
+    response::{self, content, Responder, Response},
 };
 
 pub use failure::err_msg;
